@@ -13,6 +13,8 @@ import json
 import cv2
 import random
 import face_recognition
+from osfunctions import make_file, make_folder, read_file
+from authorization import authorization
 
 global action
 run = False
@@ -41,127 +43,6 @@ def get_audio():
 
     return speech
 
-#authorisation function will ask for
-def authorization():
-    steps = []
-
-    #getting password
-    speak("please tell the password")
-    password = get_audio()
-
-    real_password = "password"
-
-    if password == real_password:
-        steps.append(True)
-        speak("Please look at the camera for facial recognition of user")
-        time.sleep(3)
-        random_num = random.randint(0, 100)
-
-        video_capture_object = cv2.VideoCapture(0)
-
-        ret, frame = video_capture_object.read()
-        img_name = "Face" + str(random_num) + ".jpg"
-        cv2.imwrite(img_name, frame)
-
-        video_capture_object.release()
-        cv2.destroyAllWindows()
-
-
-        #confirming faces
-        known_image = face_recognition.load_image_file("pic1.jpg")
-        unknown_image = face_recognition.load_image_file(img_name)
-
-        my_encoding = face_recognition.face_encodings(known_image)[0]
-        unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
-
-        results = face_recognition.compare_faces([my_encoding], unknown_encoding)
-        print(results)
-
-        if results:
-            steps.append(True)
-
-            speak("Please enter the password into the command prompt")
-
-            the_password = "coding"
-            password_inp = input("Enter password: ")
-
-            if password_inp == the_password:
-                run = True
-            else:
-                run = False
-                speak("incorrect password, shutting down")
-        else:
-          speak("Unauthorized user, shutting down")
-
-    else:
-        speak("incorrect password, shutting down")
-
-def make_folder():
-    speak("Please tell the folder name")
-    folder_name = get_audio()
-    time.sleep(2)
-    os.mkdir(folder_name)
-    
-    action = "folder by the name of " + str(folder_name) + " was made"
-
-    now  = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-
-    today = date.today()
-    the_date = today.strftime("%m/%d/%y")
-
-    dataset= {
-        "action": action,
-        "time": current_time,
-        "date": the_date
-    }
-
-    with open("archive.json", 'r+') as file:
-        data = json.load(file)
-        data["archive"].append(dataset)
-        file.seek(0)
-        json.dump(data, file, indent=4)
-
-def read_file():
-    speak("Please tell me the file name")
-    file_name = get_audio()
-
-    for i in os.listdir():
-        name = os.path.splitext()[0]
-        ext = os.path.splitext()[1]
-
-        if name == file_name and (ext == (".txt" or ".docx")): 
-            with open(file_name, 'r+') as file:
-                speak(file.read())
-
-def make_file():
-    speak("Please tell me the file name with extension")
-    file_data = get_audio()
-
-    file_details = file_data.split(".")
-
-    file_name = str(file_details[0])  + "." + str(file_details[1])
-
-    opener = open(file_name)
-
-    action = "file by the name of " + str(file_name) + " was made"
-
-    now  = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-
-    today = date.today()
-    the_date = today.strftime("%m/%d/%y")
-
-    dataset= {
-        "action": action,
-        "time": current_time,
-        "date": the_date
-    }
-
-    with open("archive.json", 'r+') as file:
-        data = json.load(file)
-        data["archive"].append(dataset)
-        file.seek(0)
 
 
 while run:
