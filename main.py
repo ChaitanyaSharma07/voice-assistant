@@ -13,9 +13,8 @@ import json
 import cv2
 import random
 import face_recognition
-from osfunctions import make_file, make_folder, read_file
-from authorization import authorization
-
+import authorization
+import osfunctions
 global action
 run = False
     
@@ -49,10 +48,10 @@ while run:
     command = get_audio()
 
     if (("create" or "make") and ("folder" or "directory")) and not("do not" or "don't" or "no") in command:
-        make_folder()
+        osfunctions.make_folder()
     elif (("read" or "tell me") and ("file")) and not("do not" or "don't" or "no") in command:
-        read_file()
+       osfunctions.read_file()
     elif (("create" or "make") and "file") and not("do not" or "don't" or "no") in command:
-        make_file()
+       osfunctions.make_file()
 
-authorization()
+authorization.auth()

@@ -2,21 +2,21 @@ import cv2
 import face_recognition
 import random
 import time
-from main import speak, get_audio
+import main
 
 #authorisation function will ask for
-def authorization():
+def auth():
     steps = []
 
     #getting password
-    speak("please tell the password")
-    password = get_audio()
+    main.speak("please tell the password")
+    password = main.get_audio()
 
     real_password = "password"
 
     if password == real_password:
         steps.append(True)
-        speak("Please look at the camera for facial recognition of user")
+        main.commandspeak("Please look at the camera for facial recognition of user")
         time.sleep(3)
         random_num = random.randint(0, 100)
 
@@ -43,7 +43,7 @@ def authorization():
         if results:
             steps.append(True)
 
-            speak("Please enter the password into the command prompt")
+            main.speak("Please enter the password into the command prompt")
 
             the_password = "coding"
             password_inp = input("Enter password: ")
@@ -52,9 +52,9 @@ def authorization():
                 run = True
             else:
                 run = False
-                speak("incorrect password, shutting down")
+                main.speak("incorrect password, shutting down")
         else:
-          speak("Unauthorized user, shutting down")
+          main.speak("Unauthorized user, shutting down")
 
     else:
-        speak("incorrect password, shutting down")
+        main.speak("incorrect password, shutting down")

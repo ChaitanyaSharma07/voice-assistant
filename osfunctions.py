@@ -1,9 +1,11 @@
-from main import get_audio, speak
+from main import get_audio
+from main import speak
 import json
 import time
 import os
-from datetime import datetime
 from datetime import date
+from datetime import datetime
+
 
 def make_folder():
     speak("Please tell the folder name")
