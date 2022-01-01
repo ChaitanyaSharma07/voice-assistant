@@ -15,6 +15,7 @@ import random
 import face_recognition
 from authorization import auth
 import osfunctions
+import browsing
 global action
 run = False
     
@@ -53,5 +54,7 @@ while run:
        osfunctions.read_file()
     elif (("create" or "make") and "file") and not("do not" or "don't" or "no") in command:
        osfunctions.make_file()
+    elif (("play" or "search") and "video") and not("do not" or "don't" or "no") in command:
+        browsing.youtube()
 
 auth()
