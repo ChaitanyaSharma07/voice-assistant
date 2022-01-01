@@ -1,10 +1,36 @@
-from main import get_audio
-from main import speak
 import json
 import time
 import os
 from datetime import date
 from datetime import datetime
+import random
+from gtts import gTTS
+import playsound
+import speech_recognition as sr
+
+def speak(text):
+    random_num = random.randint(1, 100)
+    tts = gTTS(text=text, lang="en")
+    filename = "voice.mp3"
+    tts.save(filename)
+    playsound.playsound(filename)
+
+
+#using sr module to get the audio from the microphone and then using it
+def get_audio():
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        speech = ""
+
+        try:
+            speech = r.recognize_google(audio)
+            print("you said " + str(speech))
+        except Exception as e:
+            print("Exception is: " + str(e))
+
+    return speech
 
 
 def make_folder():

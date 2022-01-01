@@ -13,7 +13,7 @@ import json
 import cv2
 import random
 import face_recognition
-import authorization
+from authorization import auth
 import osfunctions
 global action
 run = False
@@ -54,4 +54,4 @@ while run:
     elif (("create" or "make") and "file") and not("do not" or "don't" or "no") in command:
        osfunctions.make_file()
 
-authorization.auth()
+auth()

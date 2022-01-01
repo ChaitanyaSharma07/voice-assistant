@@ -3,20 +3,49 @@ import face_recognition
 import random
 import time
 import main
+import playsound
+from gtts import gTTS
+import speech_recognition as sr 
 
 #authorisation function will ask for
+
+def speak(text):
+    random_num = random.randint(1, 100)
+    tts = gTTS(text=text, lang="en")
+    filename = "voice.mp3"
+    tts.save(filename)
+    playsound.playsound(filename)
+
+
+#using sr module to get the audio from the microphone and then using it
+def get_audio():
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        speech = ""
+
+        try:
+            speech = r.recognize_google(audio)
+            print("you said " + str(speech))
+        except Exception as e:
+            print("Exception is: " + str(e))
+
+    return speech
+
+
 def auth():
     steps = []
 
     #getting password
-    main.speak("please tell the password")
-    password = main.get_audio()
+    speak("please tell the password")
+    password = get_audio()
 
     real_password = "password"
 
     if password == real_password:
         steps.append(True)
-        main.commandspeak("Please look at the camera for facial recognition of user")
+        speak("Please look at the camera for facial recognition of user")
         time.sleep(3)
         random_num = random.randint(0, 100)
 
@@ -43,7 +72,7 @@ def auth():
         if results:
             steps.append(True)
 
-            main.speak("Please enter the password into the command prompt")
+            speak("Please enter the password into the command prompt")
 
             the_password = "coding"
             password_inp = input("Enter password: ")
@@ -51,10 +80,12 @@ def auth():
             if password_inp == the_password:
                 run = True
             else:
-                run = False
-                main.speak("incorrect password, shutting down")
+                main.run = False
+                speak("incorrect password, shutting down")
         else:
-          main.speak("Unauthorized user, shutting down")
+          speak("Unauthorized user, shutting down")
 
     else:
-        main.speak("incorrect password, shutting down")
+        speak("incorrect password, shutting down")
+
+auth()
