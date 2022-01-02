@@ -44,7 +44,7 @@ def get_audio():
     return speech
 
 
-
+"""
 while run:
     command = get_audio()
 
@@ -58,3 +58,4 @@ while run:
         browsing.youtube()
 
 auth()
+"""
