@@ -13,9 +13,9 @@ import json
 import cv2
 import random
 import face_recognition
-from authorization import auth
-import osfunctions
-import browsing
+from osfunctions import *
+from browsing import *
+
 global action
 run = False
     
@@ -44,18 +44,71 @@ def get_audio():
     return speech
 
 
-"""
+def auth():
+    steps = []
+
+    #getting password
+    speak("Please tell the password")
+    password = get_audio()
+
+    real_password = "Password"
+
+    if password == real_password:
+        steps.append(True)
+        speak("Please look at the camera for facial recognition of user")
+        time.sleep(3)
+        random_num = random.randint(0, 100)
+
+        video_capture_object = cv2.VideoCapture(0)
+
+        ret, frame = video_capture_object.read()
+        img_name = "Face" + str(random_num) + ".jpg"
+        cv2.imwrite(img_name, frame)
+
+        video_capture_object.release()
+        cv2.destroyAllWindows()
+
+
+        #confirming faces
+        known_image = face_recognition.load_image_file("pic1.jpg")
+        unknown_image = face_recognition.load_image_file(img_name)
+
+        my_encoding = face_recognition.face_encodings(known_image)[0]
+        unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+
+        results = face_recognition.compare_faces([my_encoding], unknown_encoding)
+        print(results)
+
+        if results:
+            steps.append(True)
+
+            speak("Please enter the password into the command prompt")
+
+            the_password = "Coding"
+            password_inp = input("Enter password: ")
+
+            if password_inp == the_password:
+                run = True
+            else:
+                run = False
+                speak("Incorrect password, shutting down")
+        else:
+          speak("Unauthorized user, shutting down")
+
+    else:
+        speak("Incorrect password, shutting down")
+
+auth()
+
 while run:
     command = get_audio()
 
     if (("create" or "make") and ("folder" or "directory")) and not("do not" or "don't" or "no") in command:
-        osfunctions.make_folder()
+        make_folder()
     elif (("read" or "tell me") and ("file")) and not("do not" or "don't" or "no") in command:
-       osfunctions.read_file()
+        read_file()
     elif (("create" or "make") and "file") and not("do not" or "don't" or "no") in command:
-       osfunctions.make_file()
+        make_file()
     elif (("play" or "search") and "video") and not("do not" or "don't" or "no") in command:
-        browsing.youtube()
+        youtube()
 
-auth()
-"""

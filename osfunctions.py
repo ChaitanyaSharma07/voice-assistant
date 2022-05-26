@@ -11,7 +11,7 @@ import speech_recognition as sr
 def speak(text):
     random_num = random.randint(1, 100)
     tts = gTTS(text=text, lang="en")
-    filename = "voice.mp3"
+    filename = "voice" + str(random_num) + ".mp3"
     tts.save(filename)
     playsound.playsound(filename)
 
@@ -32,6 +32,13 @@ def get_audio():
 
     return speech
 
+def archive(dataset):
+    with open("archive.json", 'r+') as file:
+        data = json.load(file)
+        data["archive"].append(dataset)
+        file.seek(0)
+
+    
 
 def make_folder():
     speak("Please tell the folder name")
@@ -47,17 +54,15 @@ def make_folder():
     today = date.today()
     the_date = today.strftime("%m/%d/%y")
 
-    dataset= {
+    data= {
         "action": action,
         "time": current_time,
         "date": the_date
     }
 
-    with open("archive.json", 'r+') as file:
-        data = json.load(file)
-        data["archive"].append(dataset)
-        file.seek(0)
-        json.dump(data, file, indent=4)
+    archive(data)
+
+
 
 def read_file():
     speak("Please tell me the file name")
@@ -71,17 +76,44 @@ def read_file():
             with open(file_name, 'r+') as file:
                 speak(file.read())
 
+#------------------------------------------------------
+
+
 def make_file():
-    speak("Please tell me the file name with extension")
+    speak("Please tell me the file type: ")
     file_data = get_audio()
 
-    file_details = file_data.split(".")
+    extension = ""
+    file_name = ""
 
-    file_name = str(file_details[0])  + "." + str(file_details[1])
+    if "word" in file_data.lower():
+        extension = "docx"
+        speak("Please tell me the file name.")
+        file_name = get_audio()
 
-    opener = open(file_name)
+    elif "excel" in file_data.lower():
+        extension = "xlsx"
+        speak("Please tell me the file name.")
+        file_name = get_audio()
 
-    action = "file by the name of " + str(file_name) + " was made"
+    elif "json" in file_data.lower():
+        extension = "json"
+        speak("Please tell me the file name.")
+        file_name = get_audio()
+
+    elif "text" in file_data.lower():
+        extension = "txt"
+        speak("Please tell me the file name.")
+        file_name = get_audio()
+
+    file_name.replace(" ", "_")
+
+    file_uri = file_name + "." + extension
+    print("file: " + file_uri)
+
+    opener = open(file_uri)
+
+    action = "file by the name of " + str(file_uri) + " was made"
 
     now  = datetime.now()
     current_time = now.strftime("%H:%M:%S")
@@ -89,14 +121,12 @@ def make_file():
     today = date.today()
     the_date = today.strftime("%m/%d/%y")
 
-    dataset= {
+    data= {
         "action": action,
         "time": current_time,
         "date": the_date
     }
 
-    with open("archive.json", 'r+') as file:
-        data = json.load(file)
-        data["archive"].append(dataset)
-        file.seek(0)
+    archive(data)
 
+make_file()
