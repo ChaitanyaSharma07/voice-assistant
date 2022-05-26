@@ -2,19 +2,23 @@ from __future__ import print_function
 import os
 import time
 import playsound
-from face_recognition.api import face_encodings
 import speech_recognition as sr
 from gtts import gTTS                
-import datetime
 import os.path
+
+import datetime
 from datetime import datetime
 from datetime import date
+
 import json
 import cv2
 import random
 import face_recognition
+from face_recognition.api import face_encodings
+
 from osfunctions import *
 from browsing import *
+from abusefunctions import *
 
 global action
 run = False
@@ -111,4 +115,5 @@ while run:
         make_file()
     elif (("play" or "search") and "video") and not("do not" or "don't" or "no") in command:
         youtube()
-
+    elif("abuse" or "curse" or "roast" or "berate" or "finish") and not("do not" or "don't" or "no") in command:
+        abuse()
